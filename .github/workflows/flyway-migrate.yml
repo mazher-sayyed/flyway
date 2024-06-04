@@ -48,12 +48,3 @@ jobs:
             -v $(pwd)/sql:/flyway/sql \
             -v $(pwd)/flyway.conf:/flyway/conf/flyway.conf \
             flyway/flyway:latest migrate -configFiles=/flyway/conf/flyway.conf
-
-
-
-
-
-
-
-
-
