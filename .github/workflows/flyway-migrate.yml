@@ -42,3 +42,7 @@ jobs:
     - name: Run Flyway migrations
       run: |
         flyway -configFiles=./flyway.conf migrate
+
+
+
+
