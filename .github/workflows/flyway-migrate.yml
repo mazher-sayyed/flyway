@@ -1,0 +1,44 @@
+name: Flyway Migrations
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  flyway-migrate:
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+          - 1433:1433
+        env:
+          SA_PASSWORD: "MazherSayyed7777"
+          ACCEPT_EULA: "Y"
+        options: >-
+          --health-cmd "sh -c 'sleep 5s; /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P MazherSayyed7777 -Q
+          select 1'" --health-interval 10s --health-timeout 5s --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Flyway
+        uses: flyway/flyway-action@v2
+        with:
+          flyway_config_file: flyway.conf
+
+      - name: Run Flyway migrations
+        run: flyway -configFiles=flyway.conf migrate
+
+      - name: Validate Migrations
+        run: flyway -configFiles=flyway.conf validate
+
+      - name: Print Flyway Info
+        run: flyway -configFiles=flyway.conf info
+
