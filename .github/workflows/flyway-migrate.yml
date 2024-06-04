@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Flyway
-        uses: flyway/flyway-action@v2
+        uses: flyway-action@v2
         with:
           flyway_config_file: flyway.conf
 
