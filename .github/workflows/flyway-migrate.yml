@@ -1,43 +1,44 @@
-name: Flyway Migrations
+name: CI
 
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches:
-      - master
+      - main
 
 jobs:
-  flyway-migrate:
+  setup:
     runs-on: ubuntu-latest
 
     services:
-      sqlserver:
-        image: mcr.microsoft.com/mssql/server:2019-latest
+      mssql:
+        image: mcr.microsoft.com/mssql/server
         ports:
           - 1433:1433
         env:
-          SA_PASSWORD: "MazherSayyed7777"
-          ACCEPT_EULA: "Y"
+          ACCEPT_EULA: Y
+          SA_PASSWORD: YourStrong!Passw0rd
         options: >-
-          --health-cmd "sh -c 'sleep 5s; /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P MazherSayyed7777 -Q
-          select 1'" --health-interval 10s --health-timeout 5s --health-retries 10
+          --health-cmd "exit 0" 
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Flyway
-        uses: flyway-action@v2
-        with:
-          flyway_config_file: flyway.conf
+    - name: Install Flyway
+      run: |
+        wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.15.0/flyway-commandline-7.15.0-linux-x64.tar.gz | tar xvz
+        sudo ln -s `pwd`/flyway-7.15.0/flyway /usr/local/bin/flyway
 
-      - name: Run Flyway migrations
-        run: flyway -configFiles=flyway.conf migrate
+    - name: Wait for MSSQL to be ready
+      run: |
+        until nc -zv localhost 1433; do
+          echo "Waiting for MSSQL to be ready..."
+          sleep 5
+        done
 
-      - name: Validate Migrations
-        run: flyway -configFiles=flyway.conf validate
-
-      - name: Print Flyway Info
-        run: flyway -configFiles=flyway.conf info
+    - name: Run Flyway migrations
+      run: |
+        flyway -configFiles=./flyway.conf migrate
