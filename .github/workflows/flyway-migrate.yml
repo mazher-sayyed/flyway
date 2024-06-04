@@ -1,50 +1,22 @@
-name: CI
-
-on:
-  push:
-    branches:
-      - master
-
+on: [push]
+ 
 jobs:
-  setup:
+  test-Flyway-action:
     runs-on: ubuntu-latest
-
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server
-        ports:
-          - 1433:1433
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: YourStrong!Passw0rd
-        options: >-
-          --health-cmd "exit 0" 
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+    name: Test Flyway Action
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Install Flyway
-      run: |
-        wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.15.0/flyway-commandline-7.15.0-linux-x64.tar.gz | tar xvz
-        sudo ln -s `pwd`/flyway-7.15.0/flyway /usr/local/bin/flyway
-
-    - name: Wait for MSSQL to be ready
-      run: |
-        until nc -zv localhost 1433; do
-          echo "Waiting for MSSQL to be ready..."
-          sleep 5
-        done
-
-    - name: Run Flyway Migrations
-      env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      run: |
-          docker run --rm \
-            -v $(pwd)/sql:/flyway/sql \
-            -v $(pwd)/flyway.conf:/flyway/conf/flyway.conf \
-            flyway/flyway:latest migrate -configFiles=/flyway/conf/flyway.conf
+      - uses: actions/checkout@v2 
+      - uses: joshuaavalon/flyway-action@v3.0.0 
+        with:
+        # The jdbc url to use to connect to the database
+          url: 'jdbc:h2:file:./test'
+     # The user to use to connect to the database
+          user: 'sa'
+    # The password to use to connect to the database
+    password:  'YourPassword123'
+    # Comma-separated list of locations to scan recursively for migrations
+    locations:  'V1__create_table.sql'
+    # The SQL statements to run to initialize a new database connection immediately after opening it
+    initSql: # optional
+          
+    
