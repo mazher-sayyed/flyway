@@ -13,10 +13,10 @@ jobs:
      # The user to use to connect to the database
           user: 'sa'
     # The password to use to connect to the database
-    password:  'YourPassword123'
+          password: 'YourPassword123'
     # Comma-separated list of locations to scan recursively for migrations
-    locations:  './sql'
+          locations: './sql'
     # The SQL statements to run to initialize a new database connection immediately after opening it
-    initSql: # optional
+          initSql: # optional
           
     
