@@ -25,8 +25,12 @@ jobs:
           select 1'" --health-interval 10s --health-timeout 5s --health-retries 10
 
     steps:
-      - name: Checkout repository
-        uses: joshuaavalon/flyway-action@v3.0.0
+      - uses: actions/checkout@v2
+      - uses: joshuaavalon/flyway-action@v3.0.0
+        with:
+          url: jdbc:postgresql://postgres:5432/db
+          user: sa
+          password: MazherSayyed@7777
 
       - name: Set up Flyway
         uses: flyway-action@v2
