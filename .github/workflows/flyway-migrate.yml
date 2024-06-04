@@ -40,10 +40,10 @@ jobs:
         done
 
     - name: Run Flyway Migrations
-        env:
+      env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
+      run: |
           docker run --rm \
             -v $(pwd)/sql:/flyway/sql \
             -v $(pwd)/flyway.conf:/flyway/conf/flyway.conf \
