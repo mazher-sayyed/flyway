@@ -41,6 +41,3 @@ jobs:
 
       - name: Print Flyway Info
         run: flyway -configFiles=flyway.conf info
-
-
-
