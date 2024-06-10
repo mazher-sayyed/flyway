@@ -16,6 +16,6 @@ jobs:
     # The password to use to connect to the database
           password: 'YourPassword123'
     # Comma-separated list of locations to scan recursively for migrations
-          locations: ./sql/migrations
+          locations: filesystem:./sql,migrations
     # The SQL statements to run to initialize a new database connection immediately after opening it
           initSql: # optional
