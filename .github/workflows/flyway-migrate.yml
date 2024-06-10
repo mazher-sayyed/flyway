@@ -1,13 +1,21 @@
----
-- name: Flyway Action
-  uses: dohyungp/flyway-action@v1.0.0
-  with: null
-  version: null
-  locations: V1__create_table.sql
-  db-type: null
-  port: null
-  user: null
-  password: YourPassword123
-  schemas: null
-  jdbc-url: jdbc:h2:file:./test
-  init-sql: null
+
+on: [push]
+ 
+jobs:
+  test-Flyway-action:
+    runs-on: ubuntu-latest
+    name: Test Flyway Action
+    steps:
+      - uses: actions/checkout@v2 
+      - uses: joshuaavalon/flyway-action@v3.0.0 
+        with:
+        # The jdbc url to use to connect to the database
+          url: 'jdbc:h2:file:./test'
+     # The user to use to connect to the database
+          user: 'sa'
+    # The password to use to connect to the database
+          password: 'YourPassword123'
+    # Comma-separated list of locations to scan recursively for migrations
+          locations: 'V1__create_table.sql'
+    # The SQL statements to run to initialize a new database connection immediately after opening it
+          initSql: # optional
