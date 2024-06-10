@@ -1,22 +1,24 @@
-on: [push]
- 
-jobs:
-  test-Flyway-action:
-    runs-on: ubuntu-latest
-    name: Test Flyway Action
-    steps:
-      - uses: actions/checkout@v2 
-      - uses: joshuaavalon/flyway-action@v3.0.0 
-        with:
-        # The jdbc url to use to connect to the database
-          url: 'jdbc:h2:file:./test'
-     # The user to use to connect to the database
-          user: 'sa'
-    # The password to use to connect to the database
-          password: 'YourPassword123'
-    # Comma-separated list of locations to scan recursively for migrations
-          locations: 'V1__create_table.sql'
-    # The SQL statements to run to initialize a new database connection immediately after opening it
-          initSql: # optional
+            - name: Flyway Action
+  # You may pin to the exact commit or the version.
+  # uses: dohyungp/flyway-action@f9f0d8a65f72f448bbd1e2a0934bf807093806e8
+  uses: dohyungp/flyway-action@v1.0.0
+  with:
+    # flyway version
+    version: # optional, default is 10.14.0
+    # migration script location(e.g ./migrations)
+    locations: V1__create_table.sql
+    # database type(e.g postgresql, mysql)
+    db-type: # default is postgresql
+    # 
+    port: # optional, default is 5432
+    # db username
+    user: # sa
+    # db password
+    password: YourPassword123
+    # comma seperated db schema(e.g flyway,public)
+    schemas: # optional
+    # jdbc url(e.g jdbc:postgresql://dbhost.com:dbport/dbname)
+    jdbc-url: jdbc:h2:file:./test
+    # jdbc init sql
+    init-sql: # optional
           
-    
